@@ -13,31 +13,30 @@
 #include <thread>
 #include <stdio.h>
 
+// AgvStreamData
 class AgvData {
-public:
-    int x;           //x konum
-    int y;           // y konum
-    float a;           // açý
-    int ws;          // yazýlan hýz
-    int rs;          // okunan hýz 
-    float wwa;         // yazýlan teker açýsý 
-    float rwa;         // okunan teker açýsý 
+public: 
+    int X;                       //x konum
+    int Y;                       // y konum
+    float Angle;                 // açý
+    int WSpeed;                  // yazýlan hýz
+    int RSpeed;                  // okunan hýz 
+    float WAngle;                // yazýlan teker açýsý 
+    float RAngle;                // okunan teker açýsý 
 };
 
+class NetData {
+public:
+	std::string DeviceMacAddress;     //mac adresi    
+	int Ping;                         // ping degeri 
+	int ReceivedRate;                 // alýnma oraný
+	int Signal;                       // wifi sinyal kalitesi
+	int Speed;                        // wifi hýzý 
+	std ::string SSID;                // wifi ismi 
+	std::string Status;               // wifi durumu 
+	int TransmitededRate;             // iletim oraný
+	
 
-struct RollingBuffer {  //grafik için eklendi 
-	float Span;
-	ImVector<ImVec2> Data;
-	RollingBuffer() {
-		Span = 10.0f;
-		Data.reserve(2000);
-	}
-	void AddPoint(float x, float y) {
-		float xmod = fmodf(x, Span);
-		if (!Data.empty() && xmod < Data.back().x)
-			Data.shrink(0);
-		Data.push_back(ImVec2(xmod, y));
-	}
 };
 
 struct ScrollingBuffer {
@@ -65,6 +64,21 @@ struct ScrollingBuffer {
 	}
 };
 
+class SpeedGraphicData
+{
+public:
+	ScrollingBuffer ReadingSpeed;        // data depolamak için oluþturduðumuz deðiþken 
+	ScrollingBuffer WritingSpeed;        // data depolamak için oluþturduðumuz deðiþken 
+	ScrollingBuffer ReadingAngel;
+	ScrollingBuffer WritingAngel;
+	ScrollingBuffer totalAngel;
+	static ScrollingBuffer totalX;
+	static ScrollingBuffer totalY;
+
+	float Time;                          // geçen zamaný depolamak için oluþturdugumuz deðiþken 
+	float History;                       // geçmiþ zamaný depolamak için 
+};
+
 class ROTracer
 {   
 public:                   //constructor 
@@ -74,22 +88,38 @@ public:                   //constructor
 	void SpeedPage();      //fonksiyonlar 
 	void LoginPage();
 
+
 	void StartStreamParser();
 	void StopStreamParser();
 
-	AgvData* Agv;          // nesne oluþturduk
-
+	AgvData* Agv;          //agv classýna ait  nesne oluþturduk  
+	NetData* Net;
 	char IpAddress[16] = "192.168.2.125";
 	bool _isRunning;
-	
+	bool page1 = true;
+	bool position = false;
+	bool angle = false;
+	bool speed = false;
+	bool wheel = false;
+
+	bool isPause=false;       // grafik durdurma durumunu tutma       
+	SpeedGraphicData* SGD;    // SpeedGraphicData class'ýnýn nesnesini oluþturduk  
+
 
 private:
 	bool _loginPageVisibility;        //giriþ sayfa görünürlüðü
 	bool _speedPageVisibility;        //hýz grafik sayfasýnýn görünürlüðü
+	bool _positionPageVisibility;
+	bool _wheelPageVisibility;
+	bool _anglePageVisibility;
+
 
 	bool _zmqLoopFlag;               //zmq data parse iþlemini yapýp yapmama  
 
 	void ZMQDataStreamParser();       // parse iþlemi private onun için burda yoksa yukarý da yazabilirdik
+	void PositionPage();
+	void WheelPage();
+	void AngelPage();
 };
 
 
