@@ -1,4 +1,4 @@
-#include "data_for_graphic.h"   //data_for_graphic deki veriler için çagýrýyoruz 
+ï»¿#include "data_for_graphic.h"   //data_for_graphic deki veriler iÃ§in Ã§agÄ±rÄ±yoruz 
 using namespace std;
 
 
@@ -11,11 +11,13 @@ ROTracer::ROTracer() {
 	_loginPageVisibility = true;
 }
 
+
 ROTracer::~ROTracer() {
 	delete this->Agv;
 	delete this->Net;
 
 }
+
 
 void ROTracer::StartStreamParser() {
 	if (!_isRunning)
@@ -26,11 +28,13 @@ void ROTracer::StartStreamParser() {
 	}
 }
 
+
 void ROTracer::StopStreamParser() {
 	this->_zmqLoopFlag = false;
 }
 
-//--------------------------------grafik çizme alaný---------------------------------------------------------------
+
+//-------------------------agv grafik Ã§izme alanÄ±---------------------------------------------------------------
 
 void ROTracer::SpeedPage() {
 	_zmqLoopFlag = true;
@@ -42,41 +46,43 @@ void ROTracer::SpeedPage() {
 
 		ImGui::BulletText("Move your speed to change the data!");
 
-		ImGui::Checkbox("Pause", &isPause);     // duraklatma seçenegi 
+		ImGui::Checkbox("Pause", &isPauseSpeed);     // duraklatma seÃ§enegi 
 
-		if (!isPause)      // eger checkbox'a týklanmazsa (false)  güncel zamaný alýyor  
+		if (!isPauseSpeed)      // eger checkbox'a tÄ±klanmazsa (false)  gÃ¼ncel zamanÄ± alÄ±yor  
 		{
-			this->SGD->History = 20.0f;
-			this->SGD->Time += ImGui::GetIO().DeltaTime;
 
-			this->SGD->ReadingSpeed.AddPoint(this->SGD->Time, this->Agv->RSpeed);
-			this->SGD->WritingSpeed.AddPoint(this->SGD->Time, this->Agv->WSpeed);
+			this->SGD->TimeSpeedagv += ImGui::GetIO().DeltaTime;
+
+			this->SGD->ReadingSpeed.AddPoint(this->SGD->TimeSpeedagv, this->Agv->RSpeed);
+			this->SGD->WritingSpeed.AddPoint(this->SGD->TimeSpeedagv, this->Agv->WSpeed);
 
 		}
-		else     // eger checkbox'a týklanýrsa en son zamaný alýyor 
-			this->SGD->Time;
+		else     // eger checkbox'a tÄ±klanÄ±rsa en son zamanÄ± alÄ±yor 
+			this->SGD->TimeSpeedagv;
 
 
 
-		ImGui::SliderFloat("History", &this->SGD->History, 1, 300, "% 1.f saniye");  // .1f yaparsak milisaniye olarak ayarlanýyor 
+		ImGui::SliderFloat("History", &this->SGD->HistorySpeedagv, 1, 300, "% 1.f saniye");  // .1f yaparsak milisaniye olarak ayarlanÄ±yor 
 
 
 		static ImPlotAxisFlags flags = ImPlotAxisFlags_NoTickLabels;
 
-		if (ImPlot::BeginPlot("##Scrolling", ImVec2(800, 350))) {     // grafik ölçeklendirme 
+		if (ImPlot::BeginPlot("##Scrolling", ImVec2(800, 350))) {     // grafik Ã¶lÃ§eklendirme 
 			ImPlot::SetupAxes("Time [s]", "Speed [mm/s]");
 
-			ImPlot::SetupAxisLimits(ImAxis_X1, this->SGD->Time - this->SGD->History, this->SGD->Time, ImGuiCond_Always);
+			ImPlot::SetupAxisLimits(ImAxis_X1, this->SGD->TimeSpeedagv - this->SGD->HistorySpeedagv, this->SGD->TimeSpeedagv, ImGuiCond_Always);
 			ImPlot::SetupAxisLimits(ImAxis_Y1, -500, 1900);
 
 			//ImPlot::SetNextFillStyle(IMPLOT_AUTO_COL, 1.f);
 			ImPlot::PlotLine("rs X", &this->SGD->ReadingSpeed.Data[0].x, &this->SGD->ReadingSpeed.Data[0].y, this->SGD->ReadingSpeed.Data.size(), 0, this->SGD->ReadingSpeed.Offset, 2 * sizeof(float));
 			ImPlot::PlotLine("ws Y", &this->SGD->WritingSpeed.Data[0].x, &this->SGD->WritingSpeed.Data[0].y, this->SGD->WritingSpeed.Data.size(), 0, this->SGD->WritingSpeed.Offset, 2 * sizeof(float));
-			// plotline düz cizgili grafik <=> PlotShaded gölgeli grafik  
+			// plotline dÃ¼z cizgili grafik <=> PlotShaded gÃ¶lgeli grafik  
 			ImPlot::EndPlot();
 		}
 	}
 }
+
+
 
 void ROTracer::WheelPage() {
 	_zmqLoopFlag = true;
@@ -88,46 +94,47 @@ void ROTracer::WheelPage() {
 
 		ImGui::BulletText("Move your whell to change the data!");
 
-		ImGui::Checkbox("Pause", &isPause);     // duraklatma seçenegi 
+		ImGui::Checkbox("Pause", &isPauseWheel);     // duraklatma seÃ§enegi 
 
-		if (!isPause)      // eger checkbox'a týklanmazsa (false)  güncel zamaný alýyor  
+		if (!isPauseWheel)      // eger checkbox'a tÄ±klanmazsa (false)  gÃ¼ncel zamanÄ± alÄ±yor  
 		{
-			this->SGD->History = 20.0f;
-			this->SGD->Time += ImGui::GetIO().DeltaTime;
 
-			this->SGD->ReadingAngel.AddPoint(this->SGD->Time, this->Agv->RAngle);
-			this->SGD->WritingAngel.AddPoint(this->SGD->Time, this->Agv->WAngle);
+			this->SGD->TimeWheel += ImGui::GetIO().DeltaTime;
+
+			this->SGD->ReadingAngel.AddPoint(this->SGD->TimeWheel, this->Agv->RAngle);
+			this->SGD->WritingAngel.AddPoint(this->SGD->TimeWheel, this->Agv->WAngle);
 
 		}
-		else     // eger checkbox'a týklanýrsa en son zamaný alýyor 
-			this->SGD->Time;
+		else     // eger checkbox'a tÄ±klanÄ±rsa en son zamanÄ± alÄ±yor 
+			this->SGD->TimeWheel;
 
 
 
-		ImGui::SliderFloat("History", &this->SGD->History, 1, 300, "% 1.f saniye");  // .1f yaparsak milisaniye olarak ayarlanýyor 
+		ImGui::SliderFloat("History", &this->SGD->HistoryWheel, 1, 300, "% 1.f saniye");  // .1f yaparsak milisaniye olarak ayarlanÄ±yor 
 
 
 		static ImPlotAxisFlags flags = ImPlotAxisFlags_NoTickLabels;
 
-		if (ImPlot::BeginPlot("##Scrolling", ImVec2(800, 350))) {     // grafik ölçeklendirme 
-			ImPlot::SetupAxes("WHEEL ANGLES", "Speed [mm/s]");
+		if (ImPlot::BeginPlot("##Scrolling", ImVec2(800, 350))) {     // grafik Ã¶lÃ§eklendirme 
+			ImPlot::SetupAxes("Time [s]", "Wheel Â°");
 
-			ImPlot::SetupAxisLimits(ImAxis_X1, this->SGD->Time - this->SGD->History, this->SGD->Time, ImGuiCond_Always);
+			ImPlot::SetupAxisLimits(ImAxis_X1, this->SGD->TimeWheel - this->SGD->HistoryWheel, this->SGD->TimeWheel, ImGuiCond_Always);
 			ImPlot::SetupAxisLimits(ImAxis_Y1, -500, 1900);
 
 			//ImPlot::SetNextFillStyle(IMPLOT_AUTO_COL, 1.f);
 			ImPlot::PlotLine("READ WHEEL ANGLE ", &this->SGD->ReadingAngel.Data[0].x, &this->SGD->ReadingAngel.Data[0].y, this->SGD->ReadingAngel.Data.size(), 0, this->SGD->ReadingAngel.Offset, 2 * sizeof(float));
 			ImPlot::PlotLine("WRITE WHEEL ANGLE", &this->SGD->WritingAngel.Data[0].x, &this->SGD->WritingAngel.Data[0].y, this->SGD->WritingAngel.Data.size(), 0, this->SGD->WritingAngel.Offset, 2 * sizeof(float));
-			// plotline düz cizgili grafik <=> PlotShaded gölgeli grafik  
+			// plotline dÃ¼z cizgili grafik <=> PlotShaded gÃ¶lgeli grafik  
 			ImPlot::EndPlot();
 		}
 	}
 
 }
 
-void ROTracer::AngelPage() {
+
+void ROTracer::TotalAngelPage() {
 	_zmqLoopFlag = true;
-	if (this->_anglePageVisibility == true) {
+	if (this->_angleTotalPageVisibility == true) {
 
 		if (this->Agv == NULL) {
 			return;
@@ -135,48 +142,91 @@ void ROTracer::AngelPage() {
 
 		ImGui::BulletText("Move your Angel to change the data!");
 
-		ImGui::Checkbox("Pause", &isPause);     // duraklatma seçenegi 
+		ImGui::Checkbox("Pause", &isPauseTotalAngel);     // duraklatma seÃ§enegi 
 
-		if (!isPause)      // eger checkbox'a týklanmazsa (false)  güncel zamaný alýyor  
+		if (!isPauseTotalAngel)      // eger checkbox'a tÄ±klanmazsa (false)  gÃ¼ncel zamanÄ± alÄ±yor  
 		{
-			this->SGD->History = 20.0f;
-			this->SGD->Time += ImGui::GetIO().DeltaTime;
 
-			this->SGD->totalAngel.AddPoint(this->SGD->Time, this->Agv->Angle);
+			this->SGD->TimeTotalAngel += ImGui::GetIO().DeltaTime;
+
+			this->SGD->ReadingAngel.AddPoint(this->SGD->TimeTotalAngel, this->Agv->RAngle);
+			this->SGD->WritingAngel.AddPoint(this->SGD->TimeTotalAngel, this->Agv->WAngle);
 		}
-		else     // eger checkbox'a týklanýrsa en son zamaný alýyor 
-			this->SGD->Time;
+		else     // eger checkbox'a tÄ±klanÄ±rsa en son zamanÄ± alÄ±yor 
+			this->SGD->TimeTotalAngel;
 
 
 
-		ImGui::SliderFloat("History", &this->SGD->History, 1, 300, "% 1.f saniye");  // .1f yaparsak milisaniye olarak ayarlanýyor 
+		ImGui::SliderFloat("History", &this->SGD->HistoryTotalAngel, 1, 300, "% 1.f saniye");  // .1f yaparsak milisaniye olarak ayarlanÄ±yor 
 
 
 		static ImPlotAxisFlags flags = ImPlotAxisFlags_NoTickLabels;
 
-		if (ImPlot::BeginPlot("##Scrolling", ImVec2(800, 350))) {     // grafik ölçeklendirme 
-			ImPlot::SetupAxes("ANGLE", "Speed [mm/s]");
+		if (ImPlot::BeginPlot("##Scrolling", ImVec2(800, 350))) {     // grafik Ã¶lÃ§eklendirme 
+			ImPlot::SetupAxes("Time [s]", "Angle Â°");
 
-			ImPlot::SetupAxisLimits(ImAxis_X1, this->SGD->Time - this->SGD->History, this->SGD->Time, ImGuiCond_Always);
-			ImPlot::SetupAxisLimits(ImAxis_Y1, -500, 1900);
+			ImPlot::SetupAxisLimits(ImAxis_X1, this->SGD->TimeTotalAngel - this->SGD->HistoryTotalAngel, this->SGD->TimeTotalAngel, ImGuiCond_Always);
+			ImPlot::SetupAxisLimits(ImAxis_Y1, -100, 100);
 
 			//ImPlot::SetNextFillStyle(IMPLOT_AUTO_COL, 1.f);
-			ImPlot::PlotLine("TOTAL ANGLE ", &this->SGD->totalAngel.Data[0].x, &this->SGD->totalAngel.Data[0].y, this->SGD->totalAngel.Data.size(), 0, this->SGD->totalAngel.Offset, 2 * sizeof(float));
-			
-			// plotline düz cizgili grafik <=> PlotShaded gölgeli grafik  
+			ImPlot::PlotLine("W ANGLE ", &this->SGD->ReadingAngel.Data[0].x, &this->SGD->ReadingAngel.Data[0].y, this->SGD->ReadingAngel.Data.size(), 0, this->SGD->ReadingAngel.Offset, 2 * sizeof(float));
+			ImPlot::PlotLine("R ANGLE ", &this->SGD->WritingAngel.Data[0].x, &this->SGD->WritingAngel.Data[0].y, this->SGD->WritingAngel.Data.size(), 0, this->SGD->WritingAngel.Offset, 2 * sizeof(float));
+
+			// plotline dÃ¼z cizgili grafik <=> PlotShaded gÃ¶lgeli grafik  
 			ImPlot::EndPlot();
 		}
 	}
 
 }
 
+
 void ROTracer::PositionPage() {
 
+	_zmqLoopFlag = true;
+	if (this->_positionPageVisibility == true) {
 
+		if (this->Agv == NULL) {
+			return;
+		}
+
+		ImGui::BulletText("Move your position to change the data!");
+
+		ImGui::Checkbox("Pause", &isPausePosition);     // duraklatma seÃ§enegi 
+
+		if (!isPausePosition)      // eger checkbox'a tÄ±klanmazsa (false)  gÃ¼ncel zamanÄ± alÄ±yor  
+		{
+			this->SGD->HistoryPosition = 20.0f;
+			this->SGD->TimePosition += ImGui::GetIO().DeltaTime;
+
+			this->SGD->StokingPosition.AddPoint(this->Agv->X, this->Agv->Y);
+
+
+		}
+		else     // eger checkbox'a tÄ±klanÄ±rsa en son zamanÄ± alÄ±yor 
+			this->SGD->TimeReceivedRate;
+
+		ImGui::SliderFloat("History", &this->SGD->HistoryPosition, 1, 300, "% 1.f saniye");  // .1f yaparsak milisaniye olarak ayarlanÄ±yor 
+
+
+		static ImPlotAxisFlags flags = ImPlotAxisFlags_NoTickLabels;
+
+
+		if (ImPlot::BeginPlot("Scatter Plot", ImVec2(800, 350))) {
+			ImPlot::SetupAxesLimits(10000, 30000, 30000, 80000);
+			ImPlot::PlotScatter("POSITION BEFORE ", &this->SGD->StokingPosition.Data[0].x, &this->SGD->StokingPosition.Data[0].y, this->SGD->StokingPosition.Data.size(), 0, 0, 2 * sizeof(float));
+			ImPlot::PushStyleVar(ImPlotStyleVar_FillAlpha, 0.25f);
+
+			ImPlot::SetNextMarkerStyle(ImPlotMarker_Up, 6, ImPlot::GetColormapColor(1), IMPLOT_AUTO, ImPlot::GetColormapColor(1));
+			ImPlot::PlotScatter("POSITION END ", &this->SGD->StokingPosition.Data[this->SGD->StokingPosition.Offset].x, &this->SGD->StokingPosition.Data[this->SGD->StokingPosition.Offset].y, this->SGD->StokingPosition.Data.size(), 0, 0, 2 * sizeof(float));
+			ImPlot::PopStyleVar();
+			ImPlot::EndPlot();
+		}
+
+	}
 }
 
 
-//--------------------------------giriþ sayfasý--------------------------------------------------------------------
+//--------------------------------giriÅŸ sayfasÄ±-------------------------------------------------------------
 
 void ROTracer::LoginPage() {
 	//_zmqLoopFlag = false;
@@ -184,14 +234,14 @@ void ROTracer::LoginPage() {
 	{
 		ImGui::SetNextWindowSize(ImVec2(920, 520));
 
-		// GÝRÝÞ SAYFA
-		if (page1 == true)      
+		// GÄ°RÄ°Åž SAYFA
+		if (page1 == true)
 		{
 			ImGui::Begin("PAGE", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);  //, &no_collapse
 			ImGui::StyleColorsDark();
 			ImGuiStyle& style = ImGui::GetStyle();
 			ImVec4* colors = style.Colors;
-			style.WindowRounding = 0.9f; // Pencere köþelerinin yuvarlanma miktarý
+			style.WindowRounding = 0.9f; // Pencere kÃ¶ÅŸelerinin yuvarlanma miktarÄ±
 			colors[ImGuiCol_WindowBg] = ImVec4(0.15f, 0.15f, 0.15f, 0.95f);
 			colors[ImGuiCol_TitleBg] = ImVec4(0.10f, 0.10f, 0.10f, 0.95f);
 			colors[ImGuiCol_TitleBgActive] = ImVec4(0.15f, 0.15f, 0.15f, 0.95f);
@@ -207,7 +257,7 @@ void ROTracer::LoginPage() {
 			ImGui::Text(" ");
 			ImGui::Text(" ");
 			ImGui::Text(" ");
-			// Pencere baþlýðý ve IP adresi giriþ kutusu
+			// Pencere baÅŸlÄ±ÄŸÄ± ve IP adresi giriÅŸ kutusu
 			ImGui::Text("                                                       Enter IP Address");
 			ImGui::Spacing();
 
@@ -216,18 +266,18 @@ void ROTracer::LoginPage() {
 
 			ImGui::Spacing();
 
-			// IP adresi giriþi ve "Login" düðmesi
+			// IP adresi giriÅŸi ve "Login" dÃ¼ÄŸmesi
 			ImGui::SetCursorPosX((ImGui::GetWindowWidth() - ImGui::CalcTextSize("Login", NULL, true).x) / 2);
 
-			// IP adresi giriþi ve "Login" düðmesi
+			// IP adresi giriÅŸi ve "Login" dÃ¼ÄŸmesi
 			if (ImGui::Button("Login")) {
-				// IP adresi doðrulama
+				// IP adresi doÄŸrulama
 				std::regex ip_regex("^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$");
 				if (!std::regex_match(IpAddress, ip_regex)) {
 					ImGui::OpenPopup("Uyari");
 				}
 				else {
-					// Login düðmesine týklandýðýnda, saklanan IP adresi ile diðer sayfaya geçme
+					// Login dÃ¼ÄŸmesine tÄ±klandÄ±ÄŸÄ±nda, saklanan IP adresi ile diÄŸer sayfaya geÃ§me
 					std::cout << "Entered IP Address:" << IpAddress << std::endl;
 					ImGui::OpenPopup("New Page");
 					page1 = false;
@@ -238,7 +288,7 @@ void ROTracer::LoginPage() {
 			}
 
 
-			// IP adresi uyarý mesajý
+			// IP adresi uyarÄ± mesajÄ±
 			if (ImGui::BeginPopupModal("Uyari", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize)) {
 				ImGui::Text("Please enter a valid IP address.");
 				if (ImGui::Button("Ok")) {
@@ -252,76 +302,77 @@ void ROTracer::LoginPage() {
 
 	}
 
-	// Yeni acýlacak grafiklerin sayfasý penceresi 
+	// Yeni acÄ±lacak grafiklerin sayfasÄ± penceresi 
 	if (!this->_loginPageVisibility) {
 
 		if (!page1) {
 			ImGui::Begin("New Page");
 			ImGui::SetNextWindowSize(ImVec2(920, 520));
-			// Yeni sayfa içeriði ve IP adresi bilgisi
-		   //--------------------------------------------------
+
+
 			if (ImGui::CollapsingHeader("NET"))
 			{
-				ImGui::Text("DeviceMacAddress: ");
-				ImGui::Text("SSID: ");
-				ImGui::Text("Status: ");
+				ImGui::TableNextColumn();
+				ImGui::Text("DeviceMacAddress: %s", this->Net->DeviceMacAddress.c_str());
 
+				ImGui::TableNextColumn();
+				ImGui::Text("SSID: %s", this->Net->SSID.c_str());
+				ImGui::TableNextColumn();
+				ImGui::Text("Status: %s", this->Net->Status.c_str());
 
-				_speedPageVisibility = true;
-				this->SpeedPage();
+				// Ä°lk iki grafiÄŸi yan yana sÄ±rala
+				ImGui::BeginChild("Ping", ImVec2(600, 400), true);
+				_signalSpeedPingPageVisibility = true;
+				this->SignalPingSpeedPage();
+				ImGui::EndChild();
 			}
+
+
 			if (ImGui::CollapsingHeader("AGV"))
 			{
-				if (ImGui::BeginTable("split", 3))
-				{
-					ImGui::TableNextColumn(); ImGui::Checkbox("Position", &position);
-					ImGui::TableNextColumn(); ImGui::Checkbox("Angle", &angle);
-					ImGui::TableNextColumn(); ImGui::Checkbox("Speed", &speed);
-					ImGui::TableNextColumn(); ImGui::Checkbox("Wheel", &wheel);
+				ImGui::Checkbox("Wheel", &wheel);
+				ImGui::SameLine();
+				ImGui::Checkbox("Speed", &Agvspeed);
+				ImGui::SameLine();
+				ImGui::Checkbox("Angle", &totalangle);
+				ImGui::SameLine();
+				ImGui::Checkbox("Position", &position);
 
-					// pozisyon grafiði 
-					if (position == true)//position checkbox ýna týklanýnca
-					{
-						ImGui::Begin("Position Chart");
-						_positionPageVisibility = true;
-						this->PositionPage();
 
-						// x ve y kordinatý alýnnan grafik  ücgen ve daireli 
-						ImGui::End();
-					}
+				if (Agvspeed) {
+					ImGui::BeginChild("speed", ImVec2(900, 500), true);
+					_speedPageVisibility = true;
+					this->SpeedPage();
+					ImGui::EndChild();
 
-					// açý grafiði
-					if (angle == true) //angle checkbox ýna týklanýnca
-					{
-
-						ImGui::Begin("Angle Chart");
-						_anglePageVisibility = true;
-						this->AngelPage();
-						ImGui::End();
-
-					}
-
-					// hýz grafiði
-					if (speed == true)//speed checkbox ýna týklanýnca
-					{
-						ImGui::Begin("Speed Chart");
-						_speedPageVisibility = true;
-						this->SpeedPage();
-						ImGui::End();
-					}
-
-					// tekerlek açý grafiði
-					if (wheel == true)//wheel checkbox ýna týklanýnca
-					{
-						ImGui::Begin("Wheel Chart");
-						_wheelPageVisibility = true;
-						this->WheelPage();						
-						ImGui::End();
-
-					}
-					ImGui::EndTable();
 				}
+
+				if (wheel) {
+					ImGui::BeginChild("Ping", ImVec2(900, 500), true);
+					_wheelPageVisibility = true;
+					this->WheelPage();
+					ImGui::EndChild();
+
+				}
+
+				if (totalangle) {
+					ImGui::BeginChild("Total Angle", ImVec2(900, 500), true);
+					_angleTotalPageVisibility = true;
+					this->TotalAngelPage();
+					ImGui::EndChild();
+
+				}
+
+				if (position) {
+					ImGui::BeginChild("Postion", ImVec2(900, 500), true);
+					_positionPageVisibility = true;
+					this->PositionPage();
+					ImGui::EndChild();
+				}
+
+
 			}
+
 			ImGui::End();
 
 		}
@@ -337,140 +388,320 @@ void ROTracer::ZMQDataStreamParser()
 	void* subscriber = zmq_socket(context, ZMQ_SUB);
 	std::string take_ip = this->IpAddress;
 	std::string  a = "tcp://" + take_ip + ":5556";
-	//std::string b = ("tcp://%s:%d", take_ip,take_port);    // opsiyonel kullaným 
+	//std::string b = ("tcp://%s:%d", take_ip,take_port);    // opsiyonel kullanÄ±m 
 
 	int rc = zmq_connect(subscriber, a.c_str());  //"tcp://192.168.2.125:5556"
 	rc = zmq_setsockopt(subscriber, ZMQ_SUBSCRIBE, "", 0);
 
-	const int topic_size = 5;
-	const int msg_size = 128;
+	//const int topic_size = 5;
+	//const int msg_size = 128;
 
-	char topic[topic_size] = { 0 };
-	char msg[msg_size] = { 0 };
-	std::string new_msg(msg);
+	//char topic[topic_size] = { 0 };
+	//char msg[msg_size] = { 0 };
+	//std::string new_msg(msg);
 	size_t sayac = 0;
 	char* pch;
 	_isRunning = true;
 
-	printf("start");
+	fprintf(stdout, "start");
 
 	while (this->_zmqLoopFlag)
 	{
-		rc = zmq_recv(subscriber, topic, topic_size, 0);
-		if (rc != -1)
-			fprintf(stdout, "TOPIC: %s \n", topic);
+		zmq_msg_t zmq_topic;
+		zmq_msg_t zmq_message;
 
-		rc = zmq_recv(subscriber, msg, msg_size, 0);
+		zmq_msg_init(&zmq_topic);
+		rc = zmq_msg_recv(&zmq_topic, subscriber, 0);
+
+		zmq_msg_init(&zmq_message);
+		rc = zmq_msg_recv(&zmq_message, subscriber, 0);
+
+		int zmq_topic_size = zmq_msg_size(&zmq_topic);
+		int zmq_message_size = zmq_msg_size(&zmq_message);
+
+		char* zmq_topic_data = (char*)malloc(zmq_topic_size + 1);
+		memcpy(zmq_topic_data, zmq_msg_data(&zmq_topic), zmq_topic_size);
+		zmq_msg_close(&zmq_topic);
+		zmq_topic_data[zmq_topic_size] = 0;
+
+		char* zmq_message_data = (char*)malloc(zmq_message_size + 1);
+		memcpy(zmq_message_data, zmq_msg_data(&zmq_message), zmq_message_size);
+		zmq_msg_close(&zmq_message);
+		zmq_message_data[zmq_message_size] = 0;
+
+		//rc = zmq_recv(subscriber, topic, topic_size, 0);
 		if (rc != -1) {
-			if (topic == "real")         //gelen veri tipine göre parse iþlemi yapacak 
-			{
-				if (std::strcmp("real", topic) == 0) {
-					pch = strtok(msg, ";");
-					while (pch != NULL)
-					{
-						if (sayac == 0) {
-							Agv->X = stoi(pch);
-							sayac++;
+			fprintf(stdout, "TOPIC: %s \n", zmq_topic_data);
+			fprintf(stdout, "MSG: %s \n", zmq_message_data);
+		}
 
-						}
-						else if (sayac == 1) {
-							Agv->Y = stoi(pch);
-							sayac++;
+		//rc = zmq_recv(subscriber, msg, msg_size, 0);
+		if (rc != -1) {
 
-						}
-						else if (sayac == 2) {
-							Agv->Angle = std::stof(pch);
-							sayac++;
+			if (std::strcmp("real", zmq_topic_data) == 0) {
+				pch = strtok(zmq_message_data, ";");
+				while (pch != NULL)
+				{
+					if (sayac == 0) {
+						Agv->X = stoi(pch);
+						sayac++;
 
-						}
-						else if (sayac == 3) {
-							Agv->WSpeed = stoi(pch);
-							sayac++;
-
-						}
-						else if (sayac == 4) {
-							Agv->RSpeed = stoi(pch);
-							sayac++;
-
-						}
-						else if (sayac == 5) {
-							Agv->WAngle = std::stof(pch);
-							sayac++;
-
-						}
-						else if (sayac == 6) {
-							Agv->RAngle = std::stof(pch);
-							sayac++;
-
-						}
-
-						//printf("%s\n", pch);
-						pch = strtok(NULL, ";");
 					}
-					sayac = 0;
+					else if (sayac == 1) {
+						Agv->Y = stoi(pch);
+						sayac++;
+
+					}
+					else if (sayac == 2) {
+						Agv->Angle = std::stof(pch);
+						sayac++;
+
+					}
+					else if (sayac == 3) {
+						Agv->WSpeed = stoi(pch);
+						sayac++;
+
+					}
+					else if (sayac == 4) {
+						Agv->RSpeed = stoi(pch);
+						sayac++;
+
+					}
+					else if (sayac == 5) {
+						Agv->WAngle = std::stof(pch);
+						sayac++;
+
+					}
+					else if (sayac == 6) {
+						Agv->RAngle = std::stof(pch);
+						sayac++;
+
+					}
+
+					//printf("%s\n", pch);
+					pch = strtok(NULL, ";");
 				}
-				//printf("-----------------------");
-				//fprintf(stdout, "MSG: %s \n", msg);
+				sayac = 0;
 			}
-			else {
-				if (std::strcmp("net", topic) == 0) {
-					pch = strtok(msg, ";");
-					while (pch != NULL)
-					{
-						if (sayac == 0) {
-							Net->DeviceMacAddress = std::string(msg);
-							sayac++;
+			else if (std::strcmp("net", zmq_topic_data) == 0) {
+				pch = strtok(zmq_message_data, ";");
+				while (pch != NULL)
+				{
+					if (sayac == 0) {
+						Net->DeviceMacAddress = std::string(pch);
+						sayac++;
 
-						}
-						else if (sayac == 1) {
-							Net->Ping = stoi(pch);
-							sayac++;
+					}
+					else if (sayac == 1) {
+						Net->Ping = stoi(pch);
+						sayac++;
 
-						}
-						else if (sayac == 2) {
-							Net->ReceivedRate = stoi(pch);
-							sayac++;
+					}
+					else if (sayac == 2) {
+						Net->ReceivedRate = stoi(pch);
+						sayac++;
 
-						}
-						else if (sayac == 3) {
-							Net->Signal = stoi(pch);
-							sayac++;
+					}
+					else if (sayac == 3) {
+						Net->Signal = stoi(pch);
+						sayac++;
 
-						}
-						else if (sayac == 4) {
-							Net->Speed = stoi(pch);
-							sayac++;
+					}
+					else if (sayac == 4) {
+						Net->Speed = stoi(pch);
+						sayac++;
 
-						}
-						else if (sayac == 5) {
-							Net->SSID = std::string(msg);;
-							sayac++;
+					}
+					else if (sayac == 5) {
+						Net->SSID = std::string(pch);;
+						sayac++;
 
-						}
-						else if (sayac == 6) {
-							Net->Status = std::string(msg);
-							sayac++;
-						}
-						else if (sayac == 7) {
-							Net->TransmitededRate = stoi(pch);
-							sayac++;
+					}
+					else if (sayac == 6) {
+						Net->Status = std::string(pch);
+						sayac++;
+					}
+					else if (sayac == 7) {
+						Net->TransmitededRate = stoi(pch);
+						sayac++;
 
-						}
+					}
 
 					//	printf("%s\n", pch);
-						pch = strtok(NULL, ";");
-					}
-					sayac = 0;
+					pch = strtok(NULL, ";");
 				}
-				//printf("-----------------------");
-				//fprintf(stdout, "MSG: %s \n", msg);
-
+				sayac = 0;
 			}
+			/*
+			else if (std::strcmp("route", topic) == 0) {
+			}
+			else if (std::strcmp("sim", topic) == 0) {
+			}
+			else if (std::strcmp("curve", topic) == 0) {
+			}*/
+
+
+			fprintf(stdout, "----------------------- \n");
+
 		}
+
+
+		//  serbest bÄ±rakma 
+		free(zmq_topic_data);
+		free(zmq_message_data);
 	}
+
 	zmq_close(subscriber);
 	zmq_ctx_destroy(context);
 
 	_isRunning = false;
 
 }
+
+
+//------------------------------ NET grafik Ã§izme alanÄ± ----------------------------------------------------
+
+void ROTracer::ReceivedRatePage() {
+
+	_zmqLoopFlag = true;
+	if (this->_receivedRatePageVisibility == true) {
+
+		if (this->Net == NULL) {
+			return;
+		}
+
+		ImGui::BulletText("Move your Received Rate to change the data!");
+
+		ImGui::Checkbox("Pause", &isPauseReceivedRate);     // duraklatma seÃ§enegi 
+
+		if (!isPauseReceivedRate)      // eger checkbox'a tÄ±klanmazsa (false)  gÃ¼ncel zamanÄ± alÄ±yor  
+		{
+			this->SGD->HistoryReceivedRate = 20.0f;
+			this->SGD->TimeReceivedRate += ImGui::GetIO().DeltaTime;
+
+			this->SGD->StokingReceivedRate.AddPoint(this->SGD->TimeReceivedRate, this->Net->ReceivedRate);
+
+
+		}
+		else     // eger checkbox'a tÄ±klanÄ±rsa en son zamanÄ± alÄ±yor 
+			this->SGD->TimeReceivedRate;
+
+		ImGui::SliderFloat("History", &this->SGD->HistoryReceivedRate, 1, 300, "% 1.f saniye");  // .1f yaparsak milisaniye olarak ayarlanÄ±yor 
+
+
+		static ImPlotAxisFlags flags = ImPlotAxisFlags_NoTickLabels;
+
+		if (ImPlot::BeginPlot("##Scrolling", ImVec2(800, 350))) {     // grafik Ã¶lÃ§eklendirme 
+			ImPlot::SetupAxes("Time [s]", "Received rate  [ ]");
+
+			ImPlot::SetupAxisLimits(ImAxis_X1, this->SGD->TimeReceivedRate - this->SGD->HistoryReceivedRate, this->SGD->TimeReceivedRate, ImGuiCond_Always);
+			ImPlot::SetupAxisLimits(ImAxis_Y1, 0, 3000000);
+
+			//ImPlot::SetNextFillStyle(IMPLOT_AUTO_COL, 1.f);
+			ImPlot::PlotLine("received rate", &this->SGD->StokingReceivedRate.Data[0].x, &this->SGD->StokingReceivedRate.Data[0].y, this->SGD->StokingReceivedRate.Data.size(), 0, this->SGD->StokingReceivedRate.Offset, 2 * sizeof(float));
+
+			ImPlot::EndPlot();
+		}
+	}
+
+
+
+}
+void ROTracer::SignalPingSpeedPage() {
+	_zmqLoopFlag = true;
+	if (this->_signalSpeedPingPageVisibility == true) {
+
+		if (this->Net == NULL) {
+			return;
+		}
+
+		ImGui::BulletText("Move your signal,Ping, Speed to change the data!");
+
+		ImGui::Checkbox("Pause", &isPauseSignalSpeedPing);     // duraklatma seÃ§enegi 
+
+		if (!isPauseSignalSpeedPing)      // eger checkbox'a tÃ½klanmazsa (false)  gÃ¼ncel zamanÃ½ alÃ½yor  
+		{
+			this->SGD->HistorySignal = 20.0f;
+			this->SGD->TimeSignalSpeedPing += ImGui::GetIO().DeltaTime;
+
+			this->SGD->StokingSignal.AddPoint(this->SGD->TimeSignalSpeedPing, this->Net->Signal);
+			this->SGD->StokingPing.AddPoint(this->SGD->TimeSignalSpeedPing, this->Net->Ping);
+			this->SGD->StokingWifiSpeed.AddPoint(this->SGD->TimeSignalSpeedPing, this->Net->Speed);
+
+
+		}
+		else     // eger checkbox'a tÃ½klanÃ½rsa en son zamanÃ½ alÃ½yor 
+			this->SGD->TimeSignalSpeedPing;
+
+
+
+		ImGui::SliderFloat("History", &this->SGD->HistorySignal, 1, 300, "% 1.f saniye");  // .1f yaparsak milisaniye olarak ayarlanÃ½yor 
+
+
+		static ImPlotAxisFlags flags = ImPlotAxisFlags_NoTickLabels;
+
+		if (ImPlot::BeginPlot("##Scrolling", ImVec2(500, 250))) {     // grafik Ã¶lÃ§eklendirme 
+			ImPlot::SetupAxes("Time [s]", "Speed [mm/s]");
+
+			ImPlot::SetupAxisLimits(ImAxis_X1, this->SGD->TimeSignalSpeedPing - this->SGD->HistorySignal, this->SGD->TimeSignalSpeedPing, ImGuiCond_Always);
+			ImPlot::SetupAxisLimits(ImAxis_Y1, -500, 1900);
+
+			//ImPlot::SetNextFillStyle(IMPLOT_AUTO_COL, 1.f);
+			ImPlot::PlotLine("Signal", &this->SGD->StokingSignal.Data[0].x, &this->SGD->StokingSignal.Data[0].y, this->SGD->StokingSignal.Data.size(), 0, this->SGD->StokingSignal.Offset, 2 * sizeof(float));
+			ImPlot::PlotLine("Ping", &this->SGD->StokingPing.Data[0].x, &this->SGD->StokingPing.Data[0].y, this->SGD->StokingPing.Data.size(), 0, this->SGD->StokingPing.Offset, 2 * sizeof(float));
+			ImPlot::PlotLine("Speed", &this->SGD->StokingWifiSpeed.Data[0].x, &this->SGD->StokingWifiSpeed.Data[0].y, this->SGD->StokingWifiSpeed.Data.size(), 0, this->SGD->StokingWifiSpeed.Offset, 2 * sizeof(float));
+			// plotline dÃ¼z cizgili grafik <=> PlotShaded gÃ¶lgeli grafik  
+			ImPlot::EndPlot();
+		}
+	}
+
+
+
+
+
+}
+void ROTracer::TransmitededRatePage() {
+	_zmqLoopFlag = true;
+	if (this->_transmitededRatePageVisibility == true) {
+
+		if (this->Net == NULL) {
+			return;
+		}
+
+		ImGui::BulletText("Move your signal to change the data!");
+
+		ImGui::Checkbox("Pause", &isPauseTransmitededRate);     // duraklatma seÃ§enegi 
+
+		if (!isPauseTransmitededRate)      // eger checkbox'a tÄ±klanmazsa (false)  gÃ¼ncel zamanÄ± alÄ±yor  
+		{
+			this->SGD->HistoryTransmittededRate = 20.0f;
+			this->SGD->TimeTransmittededRate += ImGui::GetIO().DeltaTime;
+
+			this->SGD->StokingTransmitededRate.AddPoint(this->SGD->TimeTransmittededRate, this->Net->TransmitededRate);
+
+
+		}
+		else     // eger checkbox'a tÄ±klanÄ±rsa en son zamanÄ± alÄ±yor 
+			this->SGD->TimeTransmittededRate;
+
+		ImGui::SliderFloat("History", &this->SGD->HistoryTransmittededRate, 1, 300, "% 1.f saniye");  // .1f yaparsak milisaniye olarak ayarlanÄ±yor 
+
+
+		static ImPlotAxisFlags flags = ImPlotAxisFlags_NoTickLabels;
+
+		if (ImPlot::BeginPlot("##Scrolling", ImVec2(800, 350))) {     // grafik Ã¶lÃ§eklendirme 
+			ImPlot::SetupAxes("Time [s]", "transmiteded rate  [ ]");
+
+			ImPlot::SetupAxisLimits(ImAxis_X1, this->SGD->TimeTransmittededRate - this->SGD->HistoryTransmittededRate, this->SGD->TimeTransmittededRate, ImGuiCond_Always);
+			ImPlot::SetupAxisLimits(ImAxis_Y1, 0, 30000000);
+
+			//ImPlot::SetNextFillStyle(IMPLOT_AUTO_COL, 1.f);
+			ImPlot::PlotLine("transmiteded rate ", &this->SGD->StokingTransmitededRate.Data[0].x, &this->SGD->StokingTransmitededRate.Data[0].y, this->SGD->StokingTransmitededRate.Data.size(), 0, this->SGD->StokingTransmitededRate.Offset, 2 * sizeof(float));
+
+			ImPlot::EndPlot();
+		}
+	}
+
+
+}
+

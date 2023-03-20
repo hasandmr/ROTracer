@@ -1,11 +1,13 @@
 ﻿  data_for_graphic.cpp
-C:\Users\HASAN\Desktop\Yeni klasör (4)\ROTracer\ROTracer\data_for_graphic.cpp(52,63): warning C4244: 'bağımsız değişken': 'int' - 'float' dönüşümü; veri kaybı olabilir
-C:\Users\HASAN\Desktop\Yeni klasör (4)\ROTracer\ROTracer\data_for_graphic.cpp(53,63): warning C4244: 'bağımsız değişken': 'int' - 'float' dönüşümü; veri kaybı olabilir
-C:\Users\HASAN\Desktop\Yeni klasör (4)\ROTracer\ROTracer\data_for_graphic.cpp(365,23): warning C4130: '==': dize sabitinin adresi üzerinde mantıksal işlem
-  main.cpp
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\minwindef.h(130,1): warning C4005: 'APIENTRY': makro yeniden tanımlama
-C:\Users\HASAN\Desktop\Yeni klasör (4)\ROTracer\libs\glfw\include\GLFW\glfw3.h(98,1): message : önceki 'APIENTRY' tanımına bakın
-C:\Users\HASAN\Desktop\Yeni klasör (4)\ROTracer\ROTracer\main.cpp(94,7): warning C4189: 'show_demo_window': yerel değişken başlatıldı ancak başvurulmadı
-C:\Users\HASAN\Desktop\Yeni klasör (4)\ROTracer\ROTracer\main.cpp(95,7): warning C4189: 'show_another_window': yerel değişken başlatıldı ancak başvurulmadı
-  Kod Üretiliyor...
+C:\Users\HASAN\Desktop\Yeni klasör (4)\ROTracer\ROTracer\data_for_graphic.cpp(56,71): warning C4244: 'bağımsız değişken': 'int' - 'float' dönüşümü; veri kaybı olabilir
+C:\Users\HASAN\Desktop\Yeni klasör (4)\ROTracer\ROTracer\data_for_graphic.cpp(57,71): warning C4244: 'bağımsız değişken': 'int' - 'float' dönüşümü; veri kaybı olabilir
+C:\Users\HASAN\Desktop\Yeni klasör (4)\ROTracer\ROTracer\data_for_graphic.cpp(201,63): warning C4244: 'bağımsız değişken': 'int' - 'float' dönüşümü; veri kaybı olabilir
+C:\Users\HASAN\Desktop\Yeni klasör (4)\ROTracer\ROTracer\data_for_graphic.cpp(201,49): warning C4244: 'bağımsız değişken': 'int' - 'float' dönüşümü; veri kaybı olabilir
+C:\Users\HASAN\Desktop\Yeni klasör (4)\ROTracer\ROTracer\data_for_graphic.cpp(419,48): warning C4267: 'başlatılıyor': 'size_t' - 'int' dönüşümü; veri kaybı olabilir
+C:\Users\HASAN\Desktop\Yeni klasör (4)\ROTracer\ROTracer\data_for_graphic.cpp(420,52): warning C4267: 'başlatılıyor': 'size_t' - 'int' dönüşümü; veri kaybı olabilir
+C:\Users\HASAN\Desktop\Yeni klasör (4)\ROTracer\ROTracer\data_for_graphic.cpp(582,82): warning C4244: 'bağımsız değişken': 'int' - 'float' dönüşümü; veri kaybı olabilir
+C:\Users\HASAN\Desktop\Yeni klasör (4)\ROTracer\ROTracer\data_for_graphic.cpp(627,79): warning C4244: 'bağımsız değişken': 'int' - 'float' dönüşümü; veri kaybı olabilir
+C:\Users\HASAN\Desktop\Yeni klasör (4)\ROTracer\ROTracer\data_for_graphic.cpp(628,77): warning C4244: 'bağımsız değişken': 'int' - 'float' dönüşümü; veri kaybı olabilir
+C:\Users\HASAN\Desktop\Yeni klasör (4)\ROTracer\ROTracer\data_for_graphic.cpp(629,82): warning C4244: 'bağımsız değişken': 'int' - 'float' dönüşümü; veri kaybı olabilir
+C:\Users\HASAN\Desktop\Yeni klasör (4)\ROTracer\ROTracer\data_for_graphic.cpp(680,91): warning C4244: 'bağımsız değişken': 'int' - 'float' dönüşümü; veri kaybı olabilir
   ROTracer.vcxproj -> C:\Users\HASAN\Desktop\Yeni klasör (4)\ROTracer\x64\Debug\ROTracer.exe

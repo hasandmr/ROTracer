@@ -72,11 +72,38 @@ public:
 	ScrollingBuffer ReadingAngel;
 	ScrollingBuffer WritingAngel;
 	ScrollingBuffer totalAngel;
+	ScrollingBuffer StokingPosition;
 	static ScrollingBuffer totalX;
 	static ScrollingBuffer totalY;
 
-	float Time;                          // geçen zamaný depolamak için oluþturdugumuz deðiþken 
-	float History;                       // geçmiþ zamaný depolamak için 
+	ScrollingBuffer StokingWifiSpeed;
+	ScrollingBuffer StokingPing;
+	ScrollingBuffer StokingReceivedRate;
+	ScrollingBuffer StokingSignal;
+	ScrollingBuffer StokingTransmitededRate;
+
+	 float Time;                          // geçen zamaný depolamak için oluþturdugumuz deðiþken 
+	 float History;                       // geçmiþ zamaný depolamak için 
+	 float TimeSpeedagv;
+	 float TimePosition;
+	 float TimeWheel;
+	 float TimeAngel;
+	 float TimeTotalAngel;
+	 float TimeReceivedRate;
+	 float TimeSignalSpeedPing;
+	 float TimeTransmittededRate;
+	 float HistorySpeedagv= 20.f;
+	 float HistoryPosition;
+	 float HistoryWheel = 20.f;
+	 float HistoryAngel;
+	 float HistoryTotalAngel=20.f;
+	 float HistoryWifiSpeed;
+	 float HistoryPing;
+	 float HistoryReceivedRate;
+	 float HistorySignal;
+	 float HistoryTransmittededRate;
+	 
+
 };
 
 class ROTracer
@@ -85,41 +112,69 @@ public:                   //constructor
 	ROTracer();
 	~ROTracer();
 
-	void SpeedPage();      //fonksiyonlar 
+	void SpeedPage();      // agv fonksiyonlar 
 	void LoginPage();
+	void PositionPage();
+	void WheelPage();
+	void TotalAngelPage();
+	//----------------
+	void WifiSpeedPage();    // net fonksiyonlarý 
+	void PingPage();
+	void ReceivedRatePage();
+	void SignalPingSpeedPage();
+	void TransmitededRatePage();
 
 
 	void StartStreamParser();
 	void StopStreamParser();
 
+
 	AgvData* Agv;          //agv classýna ait  nesne oluþturduk  
 	NetData* Net;
+	SpeedGraphicData* SGD;    // SpeedGraphicData class'ýnýn nesnesini oluþturduk 
+
 	char IpAddress[16] = "192.168.2.125";
 	bool _isRunning;
 	bool page1 = true;
+	// agv checkbox durum dekiþkenleri
 	bool position = false;
 	bool angle = false;
-	bool speed = false;
+	bool totalangle = false;
+	bool Agvspeed = false;
 	bool wheel = false;
-
-	bool isPause=false;       // grafik durdurma durumunu tutma       
-	SpeedGraphicData* SGD;    // SpeedGraphicData class'ýnýn nesnesini oluþturduk  
-
+	bool wifispeed = false;
+	bool ping = false;
+	bool receivedrate = false;
+	bool signal = false;
+	bool transmitededrate = false;
+    
+	bool isPauseWheel = false;      	// grafik durdurma durumunu tutma   
+	bool isPauseAngel = false;
+	bool isPauseTotalAngel = false;
+	bool isPauseReceivedRate = false;
+	bool isPauseSignalSpeedPing = false;
+	bool isPauseTransmitededRate = false;
+	bool isPauseSpeed = false;
+	bool isPausePosition = false;
 
 private:
-	bool _loginPageVisibility;        //giriþ sayfa görünürlüðü
-	bool _speedPageVisibility;        //hýz grafik sayfasýnýn görünürlüðü
-	bool _positionPageVisibility;
-	bool _wheelPageVisibility;
-	bool _anglePageVisibility;
+	bool _loginPageVisibility ;        //giriþ sayfa görünürlüðü
+	bool _speedPageVisibility = false;        //hýz grafik sayfasýnýn görünürlüðü
+	bool _positionPageVisibility = false;
+	bool _wheelPageVisibility = false;
+	bool _anglePageVisibility=false;
+	bool _angleTotalPageVisibility = false;
+
+	
+	bool _receivedRatePageVisibility;
+	bool _signalSpeedPingPageVisibility;
+	bool _transmitededRatePageVisibility;
 
 
 	bool _zmqLoopFlag;               //zmq data parse iþlemini yapýp yapmama  
 
 	void ZMQDataStreamParser();       // parse iþlemi private onun için burda yoksa yukarý da yazabilirdik
-	void PositionPage();
-	void WheelPage();
-	void AngelPage();
+	
 };
 
 
