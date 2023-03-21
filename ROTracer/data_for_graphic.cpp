@@ -238,24 +238,24 @@ void ROTracer::PositionPage() {
 				//ImPlot::PlotScatter("p2 ", &this->SGD->StokingPosition.Data[lastIndex].x, &this->SGD->StokingPosition.Data[lastIndex].y, 1);
 
 				//ImPlot::PopStyleVar();
-				int r = 5;
+				int r = 50;
 				float x1 = this->SGD->StokingPosition.Data[lastIndex].x;
 				float y1 = this->SGD->StokingPosition.Data[lastIndex].y;
 				
-				float x_1 = x1 + cos(this->Agv->Angle * PI / 180) * r;   //üst 
-				float y_1 = y1 + sin(this->Agv->Angle * PI / 180) * r;
+				float x_1 = x1 + cos(this->Agv->Angle * PI / 180) * r*2;
+				float y_1 = y1 + sin(this->Agv->Angle * PI / 180) * r*2;
 
-				float x_2 = x1 + cos((this->Agv->Angle + 120) * PI / 180) * r;  // sol alt 
-				float y_2 = y1 + sin((this->Agv->Angle + 120) * PI / 180) * r;
+				float x_2 = x1 + cos( fmod(this->Agv->Angle + 120 , 360)  * PI / 180) * r; 
+				float y_2 = y1 + sin(fmod(this->Agv->Angle + 120, 360) * PI / 180) * r;
 
-				float x_3 = x1 + cos((this->Agv->Angle + 240) * PI / 180) * r;    //sağ alt 
-				float y_3 = y1 + sin((this->Agv->Angle + 240) * PI / 180) * r;
+				float x_3 = x1 + cos(fmod(this->Agv->Angle + 240, 360) * PI / 180) * r;  
+				float y_3 = y1 + sin(fmod(this->Agv->Angle + 240, 360) * PI / 180) * r;
 
 
-				ImVec2 p1 = ImPlot::PlotToPixels(ImPlotPoint(x_2, y_2));    //sol alt 
-				ImVec2 p2 = ImPlot::PlotToPixels(ImPlotPoint(x_3, y_3));     // sag alt 
-				ImVec2 p3 = ImPlot::PlotToPixels(ImPlotPoint(x_1, y_1));     // tepe
-				ImPlot::GetPlotDrawList()->AddTriangleFilled(p1, p2, p3, IM_COL32(128, 0, 255, 255));
+				ImVec2 p1 = ImPlot::PlotToPixels(ImPlotPoint(x_2, y_2));//sol alt 
+				ImVec2 p2 = ImPlot::PlotToPixels(ImPlotPoint(x_3, y_3));// sag alt 
+				ImVec2 p3 = ImPlot::PlotToPixels(ImPlotPoint(x_1, y_1));// tepe
+				ImPlot::GetPlotDrawList()->AddTriangleFilled(p1, p2, p3, IM_COL32(255, 127, 0, 255));
 
 				ImPlot::EndPlot();
 			}
@@ -585,6 +585,9 @@ void ROTracer::ZMQDataStreamParser()
 					//printf("%s\n", pch);
 					pch = strtok(NULL, ";");
 				}
+
+				this->SGD->StokingPosition.AddPoint(Agv->X, Agv->Y);
+
 				sayac = 0;
 			}
 			else if (std::strcmp("net", zmq_topic_data) == 0) {
