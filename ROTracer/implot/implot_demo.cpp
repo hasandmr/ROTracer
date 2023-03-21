@@ -1994,6 +1994,8 @@ void Demo_CustomRendering() {
         ImPlot::PopPlotClipRect();
         ImPlot::EndPlot();
     }
+
+
 }
 
 //-----------------------------------------------------------------------------
